@@ -25,11 +25,29 @@ Argumente:
  - `--help` afiseaza argumentele suportate si o scurta descriere a functionalitatii scriptului
  
 
-Rulare:
+### Rulare:
+
+Intregul proiect poate fi clonat local folosind:
 
 ```
+git clone https://github.com/VladThodo/proiect-lp.git
+```
+Si mai apoi rulat folosind:
+
+```
+cd proiect-lp
 python3 script.py
 ```
+
+Sau, dupa caz:
+
+```
+cd proiect-lp
+python script.py
+```
+
+In lipsa oricaror argumente, scriptul afiseaza informatii detaliate despre pachetele capturate de la prima interfata detectata de tshark in sistem si salveaza datele in fisierul `capture.csv`.
+
 
 ### Colaboratori 
 
