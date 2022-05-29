@@ -76,14 +76,14 @@ atexit.register(salvare_date) # "Inregistram" functia salvare_date ca si callbac
 
 # "Inregistram" argumentele folosite de program (functionalitate + descriere)
 
-parser = argparse.ArgumentParser(description='Monitorizeaza pachetele ce intra/ies din sistem')
-parser.add_argument('--dns', action="store_true", help='Afiseaza doar cererile/raspunsurile DNS')
-parser.add_argument('--full', action="store_true", help='Afiseaza informatii pe larg despre fiecare pachet')
-parser.add_argument('--brief', action="store_true", help="Afiseaza informatii pe scurt despre fiecare pachet (lungime/IP sursa, IP destinatie - daca sunt disponibile)")
-parser.add_argument('--interfata', type=str, help="Interfata de internet de unde se doreste vizualizarea pachetelor (standard: wlo1)")
-parser.add_argument('-f', type=str, help="Fisierul in care se stocheaza datele in format CSV (standard: capture.csv)")
+parser = argparse.ArgumentParser(description='Monitorizeaza pachetele ce intra/ies din sistem') #descrierea programului
+parser.add_argument('--dns', action="store_true", help='Afiseaza doar cererile/raspunsurile DNS') # afisare pachete DNS
+parser.add_argument('--full', action="store_true", help='Afiseaza informatii pe larg despre fiecare pachet') #afisare informatii delatiate
+parser.add_argument('--brief', action="store_true", help="Afiseaza informatii pe scurt despre fiecare pachet (lungime/IP sursa, IP destinatie - daca sunt disponibile)")   #afisare informatii pe scurt
+parser.add_argument('--interfata', type=str, help="Interfata de internet de unde se doreste vizualizarea pachetelor (standard: prima )") #interfata de unde se face captura
+parser.add_argument('-f', type=str, help="Fisierul in care se stocheaza datele in format CSV (standard: capture.csv)") #selectezi numele fisierului
 
-args = parser.parse_args()
+args = parser.parse_args() #interpretarea argumentelor
 
 # Verificam daca parametrii de rulare ai programului au fost setati corect sau inchidem programul in caz contrar
 
@@ -91,12 +91,13 @@ if args.dns and args.full or args.dns and args.brief or args.full and args.brief
     print(Style.BRIGHT + Fore.RED + "Nu se pot accepta argumentele simultan.")
     sys.exit()
 
-
+#Verificam daca a fost setat un alt nume de fisier pentru cel de iesire
 if args.f:
     CSV_FILE = args.f
 
+#Verificam  daca este setata alta interfata decat cea standard
 if args.interfata:
-    if args.brief:
+    if args.brief: #Verificam modul de operare full sau brief
         capture = pyshark.LiveCapture(interface=args.interfata, only_summaries=True)
     else:
         capture = pyshark.LiveCapture(interface=args.interfata)
@@ -106,8 +107,8 @@ else:
     else:
         capture = pyshark.LiveCapture()
 
-
-def print_callback(pkt):
+#Functia apelata pentru fiecare pachet primit
+def print_callback(pkt): #Verificam modul de operare si printam informatiile corespunzatoare pachetelor
     if args.dns:
         printare_dns(pkt)
     elif args.full:
@@ -119,7 +120,7 @@ def print_callback(pkt):
         print(pkt)
     CAPTURE_LIST.append(pkt)
 
-
+#Inregistram o functie care va fi apelata pentru fiecare pachet primit
 capture.apply_on_packets(print_callback)
 
 
