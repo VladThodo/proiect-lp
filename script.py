@@ -9,6 +9,7 @@ Pentru rularea acestuia este necesar ca tshark sa fie instalat pe sistemul local
 
 Referinte cod sursa reutilizat si documentatie folosita:
 
+https://www.geeksforgeeks.org/working-csv-files-python/
 https://stackoverflow.com/questions/41417235/pyshark-attribute-error-while-printing-dns-info
 https://docs.python.org/3/library/atexit.html
 
@@ -30,12 +31,17 @@ CAPTURE_LIST = []
 #
 
 def salvare_date():
-    # Salvam datele intr-un CSV (cumva)
-    print(Style.BRIGHT + Fore.YELLOW + "\nDatele au fost salvate in..")
+    # Salvam datele intr-un CSV
     print(Style.RESET_ALL + Fore.RESET)
 
     if len(CAPTURE_LIST) > 0:
-        print(CAPTURE_LIST)
+        try:
+            with open(CSV_FILE, 'w') as csvfile:
+                csvwriter = csv.writer(csvfile)
+                csvwriter.writerows(CAPTURE_LIST)
+            print(Style.BRIGHT + Fore.YELLOW + "\nDatele au fost salvate in "+CSV_FILE)
+        except:
+            print(Style.BRIGHT + Fore.RED + "\nA fost intampinata o problema la scrierea datelor")
 
 
 
