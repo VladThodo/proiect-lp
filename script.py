@@ -73,10 +73,15 @@ if args.f:
 
 if args.interfata:
     NET_INTERFACE = args.interfata
-    capture = pyshark.LiveCapture(interface=NET_INTERFACE)
+    if args.brief:
+        capture = pyshark.LiveCapture(interface=NET_INTERFACE, only_summaries=True)
+    else:
+        capture = pyshark.LiveCapture(interface=NET_INTERFACE)
 else:
-    capture = pyshark.LiveCapture()
-
+    if args.brief:
+        capture = pyshark.LiveCapture(only_summaries=True)
+    else:
+        capture = pyshark.LiveCapture()
 
 
 
@@ -87,7 +92,7 @@ def print_callback(pkt):
         print(Style.BRIGHT + Fore.RED + "\n\nA fost primit un pachet de %s octeti\n" % pkt.length)
         pkt.pretty_print()
     elif args.brief:
-        print(Style.BRIGHT + Fore.RED + "\n\nA fost primit un pachet de %s octeti\n" % pkt.length)
+        print(pkt)
     else:
         print(pkt)
 
