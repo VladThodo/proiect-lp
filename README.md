@@ -46,6 +46,13 @@ cd proiect-lp
 python script.py
 ```
 
+Dependentele pot fi instalate dupa activarea virtual environment-ului folosind:
+
+```
+pip3 install -r requirements.txt
+```
+
+
 In lipsa oricaror argumente, scriptul afiseaza informatii detaliate despre pachetele capturate de la prima interfata detectata de tshark in sistem si salveaza datele in fisierul `capture.csv`.
 
 
