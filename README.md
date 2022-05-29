@@ -8,13 +8,22 @@ Script ce analizeaza pachetele ce intra/ies din reteaua sistemului pe care rulea
 
 Module utilizate:
  - Colorama
+ - Pyshark
+ - Atexit
+ - CSV
+ - Argparse
+ - Sys
 
 ### Utilizare
 
 Argumente:
+ - `-f FILE` permite selectarea fisierului in care vor fi salvate datele in format CSV
+ - `--interfata INTERFATA` permite selectarea interfetei de la care se va efectua captura
  - `--dns` analizeaza doar cererile si raspunsurile de tip DNS
  - `--full` afiseaza informatii detaliate despre fiecare pachet in parte
+ - `--brief` afiseaza informatii pe scurt despre fiecare pachet
  - `--help` afiseaza argumentele suportate si o scurta descriere a functionalitatii scriptului
+ 
 
 Rulare:
 
