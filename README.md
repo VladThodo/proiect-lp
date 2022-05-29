@@ -21,3 +21,9 @@ Rulare:
 ```
 python3 script.py
 ```
+
+### Colaboratori 
+
+<a href="https://github.com/VladThodo/proiect-lp/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=VladThodo/proiect-lp" />
+</a>
