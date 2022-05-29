@@ -12,6 +12,12 @@ Referinte cod sursa reutilizat si documentatie folosita:
 https://www.geeksforgeeks.org/working-csv-files-python/
 https://stackoverflow.com/questions/41417235/pyshark-attribute-error-while-printing-dns-info
 https://docs.python.org/3/library/atexit.html
+http://kiminewt.github.io/pyshark/
+https://machineperson.github.io/assets/traffic%20analysis.pdf
+https://thepacketgeek.com/pyshark/capture-modules/
+https://thepacketgeek.com/pyshark/intro-to-pyshark/
+https://stackoverflow.com/questions/19782075/how-to-stop-terminate-a-python-script-from-running
+https://pypi.org/project/colorama/
 
 """
 
@@ -22,29 +28,32 @@ import sys
 from colorama import init, Fore, Style
 import csv
 
-CSV_FILE = "capture.csv"
-NET_INTERFACE = "wlo1"
-CAPTURE_LIST = []
+CSV_FILE = "capture.csv" # Numele standard al fisierului in care vom stoca datele
+CAPTURE_LIST = []       # Lista cu pachetele capturate
 
 
 # Functie apelata in momentul in care programul se inchide
-#
 
 def salvare_date():
     # Salvam datele intr-un CSV
-    print(Style.RESET_ALL + Fore.RESET)
 
-    if len(CAPTURE_LIST) > 0:
+    print(Style.RESET_ALL + Fore.RESET) # Resetam culoarea si stilul textului
+
+    if len(CAPTURE_LIST) > 0:   # Verificam daca a fost capturat vreun pachet si incercam salvarea intr-un CSV
         try:
             with open(CSV_FILE, 'w') as csvfile:
                 csvwriter = csv.writer(csvfile)
                 csvwriter.writerows(CAPTURE_LIST)
-            print(Style.BRIGHT + Fore.YELLOW + "\nDatele au fost salvate in "+CSV_FILE)
-        except:
-            print(Style.BRIGHT + Fore.RED + "\nA fost intampinata o problema la scrierea datelor")
+            # In caz pozitiv, afisam un mesaj galben de informare
+            print(Style.BRIGHT + Fore.YELLOW + "\nDatele au fost salvate in " + CSV_FILE)
+        except BaseException as e:
+            # In caz de eroare, afisam un mesaj rosu si eroarea intampinata
+            print(Style.BRIGHT + Fore.RED + "\nA fost intampinata o problema la scrierea datelor" + str(e))
+    else:   # Daca nu a fost capturat niciun pachet
+        print(Style.BRIGHT + Fore.RED + "\n Nu exista pachete pentru scriere.")
 
-
-
+# Functia filtreaza doar pachetele DNS si le afiseaza
+# Pentru raspunsuri se afiseaza si corespondenta domeniu -> IP
 
 def printare_dns(pkt):
     try:
@@ -61,8 +70,11 @@ def printare_dns(pkt):
         pass
 
 
-init()
-atexit.register(salvare_date)
+init() # Initializare Colorama pentru a putea printa text color
+
+atexit.register(salvare_date) # "Inregistram" functia salvare_date ca si callback pentru atexit (va fi apelata la inchiderea programului)
+
+# "Inregistram" argumentele folosite de program (functionalitate + descriere)
 
 parser = argparse.ArgumentParser(description='Monitorizeaza pachetele ce intra/ies din sistem')
 parser.add_argument('--dns', action="store_true", help='Afiseaza doar cererile/raspunsurile DNS')
@@ -84,11 +96,10 @@ if args.f:
     CSV_FILE = args.f
 
 if args.interfata:
-    NET_INTERFACE = args.interfata
     if args.brief:
-        capture = pyshark.LiveCapture(interface=NET_INTERFACE, only_summaries=True)
+        capture = pyshark.LiveCapture(interface=args.interfata, only_summaries=True)
     else:
-        capture = pyshark.LiveCapture(interface=NET_INTERFACE)
+        capture = pyshark.LiveCapture(interface=args.interfata)
 else:
     if args.brief:
         capture = pyshark.LiveCapture(only_summaries=True)
@@ -110,4 +121,5 @@ def print_callback(pkt):
 
 
 capture.apply_on_packets(print_callback)
+
 
