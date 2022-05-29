@@ -32,7 +32,7 @@ Intregul proiect poate fi clonat local folosind:
 ```
 git clone https://github.com/VladThodo/proiect-lp.git
 ```
-Si mai apoi rulat folosind:
+Si mai apoi rulat, daca sunt indeplinite dependentele, folosind:
 
 ```
 cd proiect-lp
