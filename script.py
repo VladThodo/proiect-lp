@@ -23,6 +23,7 @@ import csv
 
 CSV_FILE = "capture.csv"
 NET_INTERFACE = "wlo1"
+CAPTURE_LIST = []
 
 
 # Functie apelata in momentul in care programul se inchide
@@ -32,6 +33,11 @@ def salvare_date():
     # Salvam datele intr-un CSV (cumva)
     print(Style.BRIGHT + Fore.YELLOW + "\nDatele au fost salvate in..")
     print(Style.RESET_ALL + Fore.RESET)
+
+    if len(CAPTURE_LIST) > 0:
+        print(CAPTURE_LIST)
+
+
 
 
 def printare_dns(pkt):
@@ -49,7 +55,7 @@ def printare_dns(pkt):
         pass
 
 
-init(convert=True)
+init()
 atexit.register(salvare_date)
 
 parser = argparse.ArgumentParser(description='Monitorizeaza pachetele ce intra/ies din sistem')
@@ -84,7 +90,6 @@ else:
         capture = pyshark.LiveCapture()
 
 
-
 def print_callback(pkt):
     if args.dns:
         printare_dns(pkt)
@@ -95,6 +100,7 @@ def print_callback(pkt):
         print(pkt)
     else:
         print(pkt)
+    CAPTURE_LIST.append(pkt)
 
 
 capture.apply_on_packets(print_callback)
