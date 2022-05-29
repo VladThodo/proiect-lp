@@ -18,7 +18,7 @@ import atexit
 import pyshark
 import argparse
 import sys
-from colorama import Fore, Style
+from colorama import init, Fore, Style
 import csv
 
 CSV_FILE = "capture.csv"
@@ -49,6 +49,7 @@ def printare_dns(pkt):
         pass
 
 
+init(convert=True)
 atexit.register(salvare_date)
 
 parser = argparse.ArgumentParser(description='Monitorizeaza pachetele ce intra/ies din sistem')
@@ -72,8 +73,11 @@ if args.f:
 
 if args.interfata:
     NET_INTERFACE = args.interfata
+    capture = pyshark.LiveCapture(interface=NET_INTERFACE)
+else:
+    capture = pyshark.LiveCapture()
 
-capture = pyshark.LiveCapture(interface='wlo1')
+
 
 
 def print_callback(pkt):
@@ -84,6 +88,8 @@ def print_callback(pkt):
         pkt.pretty_print()
     elif args.brief:
         print(Style.BRIGHT + Fore.RED + "\n\nA fost primit un pachet de %s octeti\n" % pkt.length)
+    else:
+        print(pkt)
 
 
 capture.apply_on_packets(print_callback)
